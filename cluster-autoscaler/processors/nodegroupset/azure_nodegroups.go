@@ -26,7 +26,7 @@ const AzureNodepoolLabel = "agentpool"
 func nodesFromSameAzureNodePool(n1, n2 *schedulerframework.NodeInfo) bool {
 	n1AzureNodePool := n1.Node().Labels[AzureNodepoolLabel]
 	n2AzureNodePool := n2.Node().Labels[AzureNodepoolLabel]
-	return n1AzureNodePool != "" && n1AzureNodePool == n2AzureNodePool
+	return n1AzureNodePool == n2AzureNodePool
 }
 
 // CreateAzureNodeInfoComparator returns a comparator that checks if two nodes should be considered

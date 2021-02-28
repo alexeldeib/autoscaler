@@ -525,7 +525,6 @@ func (m *AzureManager) fetchExplicitAsgs(specs []string) error {
 	return nil
 }
 
-
 // TODO: register those properly with the VMSS name
 // We can always return the CreateNodeGroupResult with the real VMSS name and regenerate cache
 // to register the scaling group
@@ -569,7 +568,7 @@ func (m *AzureManager) fetchAutoprovisionedGroups() error {
 					return err
 				}
 				asg.vmssName = *scaleSet.Name
-				if *scaleSet.Zones != nil {
+				if scaleSet.Zones != nil {
 					zone := *scaleSet.Zones
 					asg.zone = zone[0]
 				}
