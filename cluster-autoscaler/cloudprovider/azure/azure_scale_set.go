@@ -72,8 +72,8 @@ type autoprovisioningSpec struct {
 	machineType    string
 	labels         map[string]string
 	taints         []apiv1.Taint
-	zonal 		   bool
-	zone		   string
+	zonal          bool
+	zone           string
 	extraResources map[string]resource.Quantity
 }
 
@@ -91,8 +91,8 @@ type ScaleSet struct {
 	sizeRefreshPeriod    time.Duration
 	exists               bool
 	autoprovisioned      bool
-	zone 				 string
-	vmssName string
+	zone                 string
+	vmssName             string
 	autoProvisioningSpec *autoprovisioningSpec
 
 	instancesRefreshPeriod time.Duration
@@ -109,11 +109,11 @@ func NewScaleSet(spec *dynamic.NodeGroupSpec, az *AzureManager, curSize int64, e
 		azureRef: azureRef{
 			Name: spec.Name,
 		},
-		minSize: spec.MinSize,
-		maxSize: spec.MaxSize,
-		manager: az,
-		curSize: curSize,
-		exists: exists,
+		minSize:         spec.MinSize,
+		maxSize:         spec.MaxSize,
+		manager:         az,
+		curSize:         curSize,
+		exists:          exists,
 		autoprovisioned: autoprovisioned,
 
 		instancesRefreshJitter: az.config.VmssVmsCacheJitter,
@@ -175,13 +175,13 @@ func (scaleSet *ScaleSet) Delete() error {
 		return nil
 	}
 
-	return cloudprovider.ErrNotImplemented}
+	return cloudprovider.ErrNotImplemented
+}
 
 // Autoprovisioned returns true if the node group is autoprovisioned.
 func (scaleSet *ScaleSet) Autoprovisioned() bool {
 	return scaleSet.autoprovisioned
 }
-
 
 func (scaleSet *ScaleSet) createNodepool(targetSize int) (cloudprovider.NodeGroup, error) {
 	ctx, cancel := getContextWithCancel()
@@ -218,8 +218,8 @@ func (scaleSet *ScaleSet) createNodepool(targetSize int) (cloudprovider.NodeGrou
 	// vnetSubnetID := (*managedCluster.AgentPoolProfiles)[0].VnetSubnetID
 	pool := containerservice.AgentPool{
 		ManagedClusterAgentPoolProfileProperties: &containerservice.ManagedClusterAgentPoolProfileProperties{
-			VMSize:              containerservice.VMSizeTypes(scaleSet.autoProvisioningSpec.machineType),
-			OsType:              containerservice.Linux,
+			VMSize: containerservice.VMSizeTypes(scaleSet.autoProvisioningSpec.machineType),
+			OsType: containerservice.Linux,
 			// create with zero, then issue scale up
 			Count:               to.Int32Ptr(int32(0)),
 			Type:                containerservice.VirtualMachineScaleSets,
@@ -284,12 +284,11 @@ func (scaleSet *ScaleSet) createNodepool(targetSize int) (cloudprovider.NodeGrou
 			poolNameToReturn = fmt.Sprintf("%s1", poolNameToReturn)
 		}
 		if ap.Id() == poolNameToReturn {
-				return ap, nil
+			return ap, nil
 		}
 	}
 	return nil, fmt.Errorf("agentpool %s for autoprovisioned template %s not found", nodePoolName, scaleSet.Name)
 }
-
 
 func (scaleSet *ScaleSet) waitForCreateOrUpdateAp(future *azure.Future) {
 	var err error
@@ -728,7 +727,6 @@ func (scaleSet *ScaleSet) TemplateNodeInfo() (*schedulerframework.NodeInfo, erro
 	} else {
 		return nil, fmt.Errorf("unable to get node info for %s/%s", scaleSet.manager.config.ClusterName, scaleSet.Name)
 	}
-
 
 	nodeInfo := schedulerframework.NewNodeInfo(cloudprovider.BuildKubeProxy(scaleSet.Name))
 	nodeInfo.SetNode(node)
